@@ -5,6 +5,10 @@ public class Main {
         InstanceCard a2 = new InstanceCard(CardOriginal.TEST_NO2);
         InstanceCard a3 = new InstanceCard(CardOriginal.TEST_NO3);
         InstanceCard a4 = new InstanceCard(CardOriginal.TEST_NO4);
+        InstanceCard a5 = new InstanceCard(CardOriginal.TEST_NO1);
+        InstanceCard a6 = new InstanceCard(CardOriginal.TEST_NO2);
+        InstanceCard a7 = new InstanceCard(CardOriginal.TEST_NO3);
+        InstanceCard a8 = new InstanceCard(CardOriginal.TEST_NO4);
         Slot slot_a1 = new Slot();
         Board board = new Board();
         board.placeCard(a1, 0,true);
@@ -12,7 +16,15 @@ public class Main {
         board.placeCard(a3, 2,true);
         board.placeCard(a4, 3,true);
 
-        board.showBoard();
+        board.placeCard(a5, 0,false);
+//        board.placeCard(a6, 1,false);
+        board.placeCard(a7, 2,false);
+        board.placeCard(a8, 3,false);
+
+
+        board.showBoard(1,false);
+//        board.play(true);
+//        board.showBoard();
 
 
 

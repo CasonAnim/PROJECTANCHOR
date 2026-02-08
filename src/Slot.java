@@ -30,4 +30,8 @@ public class Slot {
     public void setCard(Card card) {
         this.card = new InstanceCard(card);
     }
+
+    public InstanceCard getCard() {
+        return card;
+    }
 }

@@ -7,11 +7,21 @@ public class InstanceCard {
         this.selfHP = card.getMaxHP();
     }
 
+    public String getName() {
+        return this.card.getName();
+    }
+
     public void TakeDamage(int dmg) {
         if (dmg <= selfHP) {
             selfHP -= dmg;
         } else {
             selfHP = 0;
+        }
+    }
+
+    public void Attack(Slot target) {
+        if (!target.isEmpty()) {
+            target.getCard().TakeDamage(this.card.getAT());
         }
     }
 
