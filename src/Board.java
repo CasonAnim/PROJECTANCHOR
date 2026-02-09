@@ -21,28 +21,41 @@ public class Board {
             }
         }
     }
+    public Slot getSlot(boolean isPlyaerside, int index) {
+        if (isPlyaerside) {
+            return plrSlot[index];
+        } else {
+            return enemySlot[index];
+        }
+    }
 
     public void play(boolean isPlaySide) {
         if (isPlaySide) {
             for (int i = 0; i < SLOT_SIZE; i++) {
-                plrSlot[i].getCard().Attack(enemySlot[i]);
-            }
-        } else {
-            for (int i = 0; i < SLOT_SIZE; i++) {
-                enemySlot[i].getCard().Attack(plrSlot[i]);
-            }
-        }
-        for (int i = 0; i < SLOT_SIZE; i++) {
-            if (!enemySlot[i].isEmpty() || !plrSlot[i].isEmpty()) {
-                if (enemySlot[i].getCard().isDead()) {
-                    enemySlot[i] = new Slot();
-                }
-                if (plrSlot[i].getCard().isDead()) {
-                    plrSlot[i] = new Slot();
+                if (!plrSlot[i].isEmpty()) {
+                    if (!enemySlot[i].isEmpty()) {
+                        plrSlot[i].getCard().Attack(enemySlot[i]);
+                        if (isDeadorEmpty(enemySlot[i])) {
+                            enemySlot[i] = new Slot();
+                        }
+                    }
                 }
             }
 
+        } else {
+            for (int i = 0; i < SLOT_SIZE; i++) {
+                if (!enemySlot[i].isEmpty()) {
+                    if (!plrSlot[i].isEmpty()) {
+                        enemySlot[i].getCard().Attack(plrSlot[i]);
+                        if (isDeadorEmpty(plrSlot[i])) {
+                            plrSlot[i] = new Slot();
+                        }
+                    }
+                }
+
+            }
         }
+
     }
 
 
@@ -59,6 +72,40 @@ public class Board {
             System.out.println();
         }
     }
+//    private void StatusUpdater() {
+//        for (int i = 0; i < SLOT_SIZE; i++) {
+//            if (this.plrSlot[i].isEmpty()) {
+//                this.plrSlot[i] = new Slot();
+//            } else if (!plrSlot[i].isEmpty()) {
+//                if (plrSlot[i].getCard().isDead()) {
+//                    plrSlot[i] = new Slot();
+//                }
+//            }
+//        }
+//    }
+//    private void StatusUpdater() {
+//        for (int i = 0; i < SLOT_SIZE; i++) {
+//            if (this.enemySlot[i].isEmpty()) {
+//                this.enemySlot[i] = new Slot();
+//            } else if (!enemySlot[i].isEmpty()) {
+//                if (enemySlot[i].getCard().isDead()) {
+//                    enemySlot[i] = new Slot();
+//                }
+//            }
+//        }
+//    }
+
+    public boolean isDeadorEmpty(Slot slot) {
+        if (!slot.isEmpty()){
+            if (slot.getCard().isDead()){
+                return true;
+            }else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
 
     public void showBoard(int index , boolean isPlayerSide) {
         if (index<0||index>=SLOT_SIZE) {
@@ -68,7 +115,7 @@ public class Board {
                 System.out.println("Player Side Slot ["+index+"] : " + plrSlot[index].isEmpty());
             } else {
 
-                System.out.println("Player Side Slot ["+index+"] : " + enemySlot[index].isEmpty());
+                System.out.println("CPU Side Slot ["+index+"] : " + enemySlot[index].isEmpty());
             }
         }
     }

@@ -3,4 +3,9 @@ public class CardOriginal {
     public static final Card TEST_NO2 = new Card("Null Agent", 5,1,2);
     public static final Card TEST_NO3 = new Card("Cell", 1,0,0);
     public static final Card TEST_NO4 = new Card("Corrupted Agent", 3,2,1);
+    public static final Card GUARD =  new Card("Riot Guard", 5,1,1);
+    public static final Card JUGGERNAUT = new Card("Juggernaut", 5 , 3 , 2);
+    public static final Card RIFLEMAN = new Card("Rifleman", 2, 2,1);
+
+
 }

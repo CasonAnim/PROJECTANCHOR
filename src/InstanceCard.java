@@ -11,6 +11,10 @@ public class InstanceCard {
         return this.card.getName();
     }
 
+    public int getHP() {
+       return this.card.getMaxHP();
+    }
+
     public void TakeDamage(int dmg) {
         if (dmg <= selfHP) {
             selfHP -= dmg;
@@ -22,6 +26,8 @@ public class InstanceCard {
     public void Attack(Slot target) {
         if (!target.isEmpty()) {
             target.getCard().TakeDamage(this.card.getAT());
+        } else {
+            System.out.println("cannot be attack");
         }
     }
 

@@ -9,7 +9,7 @@ public class Main {
         InstanceCard a6 = new InstanceCard(CardOriginal.TEST_NO2);
         InstanceCard a7 = new InstanceCard(CardOriginal.TEST_NO3);
         InstanceCard a8 = new InstanceCard(CardOriginal.TEST_NO4);
-        Slot slot_a1 = new Slot();
+        Slot slot_a1 = new Slot(a1);
         Board board = new Board();
         board.placeCard(a1, 0,true);
         board.placeCard(a2, 1,true);
@@ -17,14 +17,23 @@ public class Main {
         board.placeCard(a4, 3,true);
 
         board.placeCard(a5, 0,false);
-//        board.placeCard(a6, 1,false);
+        board.placeCard(a6, 1,false);
         board.placeCard(a7, 2,false);
         board.placeCard(a8, 3,false);
 
 
-        board.showBoard(1,false);
-//        board.play(true);
-//        board.showBoard();
+//        board.play(false);
+        board.showBoard();
+//        board.showBoard(1,false);
+        board.play(false);
+//        System.out.println(board.isDeadorEmpty(board.getSlot(false,1)));
+        board.showBoard();
+//        if (!slot_a1.isEmpty()) {
+//            slot_a1.getCard().TakeDamage(5);
+//            System.out.println(slot_a1.getCard().getHP());
+//        } else {
+//            System.out.println("Cannot be attack");
+//        }
 
 
 
