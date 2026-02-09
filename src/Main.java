@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -22,18 +25,6 @@ public class Main {
         board.placeCard(a8, 3,false);
 
 
-//        board.play(false);
-        board.showBoard();
-//        board.showBoard(1,false);
-        board.play(false);
-//        System.out.println(board.isDeadorEmpty(board.getSlot(false,1)));
-        board.showBoard();
-//        if (!slot_a1.isEmpty()) {
-//            slot_a1.getCard().TakeDamage(5);
-//            System.out.println(slot_a1.getCard().getHP());
-//        } else {
-//            System.out.println("Cannot be attack");
-//        }
 
 
 
