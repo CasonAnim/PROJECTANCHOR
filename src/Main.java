@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Main {
@@ -23,9 +24,7 @@ public class Main {
         board.placeCard(a6, 1,false);
         board.placeCard(a7, 2,false);
         board.placeCard(a8, 3,false);
-        for (Map.Entry<Card, Integer> a : Deck.STARTER_DECK.entrySet()) {
-            System.out.println(a.getKey().getName() +" : " + a.getValue());
-        }
+        List<InstanceCard> testdeck = Deck.InitDeck(Deck.STARTER_DECK);
     }
 
 }
