@@ -24,7 +24,9 @@ public class Main {
         board.placeCard(a6, 1,false);
         board.placeCard(a7, 2,false);
         board.placeCard(a8, 3,false);
-        List<InstanceCard> testdeck = Deck.InitDeck(Deck.STARTER_DECK);
+//        List<InstanceCard> testdeck = Deck.InitDeck(Deck.STARTER_DECK);
+
+        Player p = new User(Deck.STARTER_DECK);
     }
 
 }
