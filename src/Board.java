@@ -10,6 +10,7 @@ public class Board {
         }
     }
 
+
     public void placeCard(InstanceCard card,int index, boolean isPlayer) {
         if (index<0||index>=SLOT_SIZE) {
             throw new RuntimeException("ไอ้ควาย มันมีแค่4ช่อง");
@@ -72,28 +73,6 @@ public class Board {
             System.out.println();
         }
     }
-//    private void StatusUpdater() {
-//        for (int i = 0; i < SLOT_SIZE; i++) {
-//            if (this.plrSlot[i].isEmpty()) {
-//                this.plrSlot[i] = new Slot();
-//            } else if (!plrSlot[i].isEmpty()) {
-//                if (plrSlot[i].getCard().isDead()) {
-//                    plrSlot[i] = new Slot();
-//                }
-//            }
-//        }
-//    }
-//    private void StatusUpdater() {
-//        for (int i = 0; i < SLOT_SIZE; i++) {
-//            if (this.enemySlot[i].isEmpty()) {
-//                this.enemySlot[i] = new Slot();
-//            } else if (!enemySlot[i].isEmpty()) {
-//                if (enemySlot[i].getCard().isDead()) {
-//                    enemySlot[i] = new Slot();
-//                }
-//            }
-//        }
-//    }
 
     public boolean isDeadorEmpty(Slot slot) {
         if (!slot.isEmpty()){

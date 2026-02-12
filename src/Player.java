@@ -15,17 +15,11 @@ public abstract class Player {
         this.hand = new ArrayList<>();
         this.deck = new ArrayList<>();
         this.deck = Deck.InitDeck(deck);
-        draw(this.deck, START_NUM);
-        for (InstanceCard a : hand) {
-            System.out.println("HAND : "+a.getName());
-        }
-
-        for (InstanceCard a : this.deck) {
-            System.out.println("LEFTOVER : "+ a.getName());
-        }
+        Startdraw(this.deck, START_NUM);
+        show();
     }
 
-    public void draw(List<InstanceCard> deck , int n) {
+    public void Startdraw(List<InstanceCard> deck , int n) {
         int tempindex;
         for (int i = 0; i < n; i++) {
             tempindex = rng.nextInt(0, deck.size());
@@ -33,4 +27,22 @@ public abstract class Player {
             deck.remove(tempindex);
         }
     }
+    public void draw() {
+        int temp = rng.nextInt(0,deck.size());
+        hand.add(deck.get(temp));
+        deck.remove(temp);
+    }
+
+    public void show() {
+        for (InstanceCard a : this.hand) {
+            System.out.println("HAND : "+a.getName());
+        }
+
+        for (InstanceCard a : this.deck) {
+            System.out.println("LEFTOVER : "+ a.getName());
+        }
+    }
+    abstract void playTurn();
+
+
 }
