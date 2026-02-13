@@ -10,8 +10,16 @@ public class Main {
         board.showBoard();
 
         Player player = new User(Deck.STARTER_DECK);
-        BattleManager battleManager = new BattleManager(board , player);
+
+       BattleManager battleManager = new BattleManager(board , player);
+       battleManager.place(CardOriginal.GUARD, 0 ,true);
+       battleManager.place(CardOriginal.GUARD, 2 ,true);
+       battleManager.place(CardOriginal.GUARD, 1 ,false);
+        battleManager.show();
         battleManager.Init();
+        battleManager.show();
+
+
 
     }
 

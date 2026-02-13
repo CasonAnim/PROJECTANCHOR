@@ -1,87 +1,78 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Board {
     public static final int SLOT_SIZE = 4;
+    private List<Slot> temp;
+    private List<Slot> tempOppo;
 
-    private Slot[] plrSlot = new Slot[SLOT_SIZE];
-    private Slot[] enemySlot = new Slot[SLOT_SIZE];
+    private List<Slot> plrSlot = new ArrayList<>();
+    private List<Slot> enemySlot = new ArrayList<>();
     public Board() {
         for (int i = 0 ; i < SLOT_SIZE; i++) {
-            plrSlot[i] = new Slot();
-            enemySlot[i] = new Slot();
+            plrSlot.add(new Slot());
+            enemySlot.add(new Slot());
         }
     }
 
 
-    public void placeCard(InstanceCard card,int index, boolean isPlayer) {
-        if (index<0||index>=SLOT_SIZE) {
-            throw new RuntimeException("ไอ้ควาย มันมีแค่4ช่อง");
+    public void placeCard(InstanceCard card, int index, boolean isPlayer) {
+        Checker(index);
+        if (isPlayer) {
+            plrSlot.get(index).setCard(card);
         } else {
-            if (isPlayer) {
-                plrSlot[index].setCard(card);
-            } else {
-                enemySlot[index].setCard(card);
-            }
+            enemySlot.get(index).setCard(card);
         }
     }
     public Slot getSlot(boolean isPlyaerside, int index) {
+        Checker(index);
+
         if (isPlyaerside) {
-            return plrSlot[index];
+            return plrSlot.get(index);
         } else {
-            return enemySlot[index];
+            return enemySlot.get(index);
         }
     }
 
-    public void play(boolean isPlaySide) {
-        if (isPlaySide) {
-            for (int i = 0; i < SLOT_SIZE; i++) {
-                if (!plrSlot[i].isEmpty()) {
-                    if (!enemySlot[i].isEmpty()) {
-                        plrSlot[i].getCard().Attack(enemySlot[i]);
-                        if (isDeadorEmpty(enemySlot[i])) {
-                            enemySlot[i] = new Slot();
-                        }
+    public List<Slot> getPlayerBoard() {
+        return List.copyOf(plrSlot);
+    }
+
+    public void play(boolean isPlayerSide) {
+        setSideTempForBattle(isPlayerSide);
+
+        for (Slot slot : temp) {
+            if (!slot.isEmpty()) {
+                if (!(tempOppo.get(temp.indexOf(slot)).isEmpty())) {
+                    slot.getCard().Attack(tempOppo.get(temp.indexOf(slot)));
+                    if (isDeadorEmpty(tempOppo.get(temp.indexOf(slot)))) {
+                        tempOppo.set(temp.indexOf(slot), new Slot());
                     }
                 }
             }
-
-        } else {
-            for (int i = 0; i < SLOT_SIZE; i++) {
-                if (!enemySlot[i].isEmpty()) {
-                    if (!plrSlot[i].isEmpty()) {
-                        enemySlot[i].getCard().Attack(plrSlot[i]);
-                        if (isDeadorEmpty(plrSlot[i])) {
-                            plrSlot[i] = new Slot();
-                        }
-                    }
-                }
-
-            }
         }
+        updateSlot(isPlayerSide);
 
     }
 
-    public List<Slot> getListSlot(boolean isPlayerSide) {
-        List<Slot> avslot = new ArrayList<>();
-        if (isPlayerSide) {
-            for (Slot slot : plrSlot) {
-                if (slot.isEmpty()) {
-                    avslot.add(slot);
-                }
-            }
-        } else {
-            for (Slot slot : enemySlot) {
-                if (slot.isEmpty()) {
-                    avslot.add(slot);
-                }
-            }
-        }
 
-        return avslot;
+    public List<Slot> getPlrSlot() {
+        return plrSlot;
     }
 
+    public void setPlrSlot(List<Slot> plrSlot) {
+        this.plrSlot = plrSlot;
+    }
 
+    public List<Slot> getEnemySlot() {
+        return enemySlot;
+    }
+
+    public void setEnemySlot(List<Slot> enemySlot) {
+        this.enemySlot = enemySlot;
+    }
 
     public void showBoard() {
         System.out.println("======CPU Board======");
@@ -94,6 +85,16 @@ public class Board {
             slot.contain();
             System.out.println();
         }
+    }
+
+    public List<Integer> getIndexAvailableSlotList(boolean isPlayerSide) {
+        SetSideForLoop(isPlayerSide);
+        List<Integer> index = new ArrayList<>();
+        for (Slot slot : temp) {
+            index.add(temp.indexOf(slot));
+        }
+        clearState();
+        return index;
     }
 
     public boolean isDeadorEmpty(Slot slot) {
@@ -109,15 +110,64 @@ public class Board {
     }
 
     public void showBoard(int index , boolean isPlayerSide) {
-        if (index<0||index>=SLOT_SIZE) {
-            throw new RuntimeException("ไอ้ควาย มันมีแค่4ช่อง");
+        Checker(index);
+        if (isPlayerSide) {
+            System.out.println("Player Side Slot ["+index+"] : " + plrSlot.get(index));
         } else {
-            if (isPlayerSide) {
-                System.out.println("Player Side Slot ["+index+"] : " + plrSlot[index].isEmpty());
-            } else {
 
-                System.out.println("CPU Side Slot ["+index+"] : " + enemySlot[index].isEmpty());
+            System.out.println("CPU Side Slot ["+index+"] : " + enemySlot.get(index));
+        }
+    }
+
+    public void Checker(int n) {
+       if (n<0||n>=SLOT_SIZE) {
+           throw new RuntimeException("ไอ้ควาย มันมีแค่4ช่อง");
+       }
+    }
+
+    public void printAvailableSlot(boolean isPlayerSide) {
+        SetSideForLoop(isPlayerSide);
+        System.out.print("Available" + "\t");
+        for (Slot slot : temp) {
+            if (slot.isEmpty()) {
+                System.out.print("[" +temp.indexOf(slot) + "]  ");
             }
+        }
+        System.out.println();
+        clearState();
+    }
+
+    public void updateSlot (boolean isPlayerSide) {
+        if (isPlayerSide) {
+            plrSlot = temp;
+            enemySlot = tempOppo;
+        } else {
+            plrSlot = tempOppo;
+            enemySlot = temp;
+        }
+        clearState();
+    }
+
+    private void clearState() {
+        temp = null;
+        tempOppo = null;
+    }
+
+    private  void setSideTempForBattle(boolean isPlayerSide) {
+        if (isPlayerSide) {
+            temp = plrSlot;
+            tempOppo = enemySlot;
+        } else {
+            temp = enemySlot;
+            tempOppo = plrSlot;
+        }
+    }
+
+    private void SetSideForLoop(boolean isPlayerSide) {
+        if (isPlayerSide) {
+            temp = plrSlot;
+        } else {
+            temp = enemySlot;
         }
     }
 }

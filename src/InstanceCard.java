@@ -42,4 +42,7 @@ public class InstanceCard {
         System.out.println("ATTACK : " + card.getAT());
         System.out.println("Cost : " + card.getCost());
     }
+    public int getDMG() {
+        return this.card.getAT();
+    }
 }

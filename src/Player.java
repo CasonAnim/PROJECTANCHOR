@@ -5,7 +5,7 @@ import java.util.Random;
 
 public abstract class Player {
     Random rng = new Random();
-
+    Board board;
     public static final int START_NUM = 5;
     private List<InstanceCard> hand;
     private List<InstanceCard> deck;
@@ -42,7 +42,43 @@ public abstract class Player {
             System.out.println("LEFTOVER : "+ a.getName());
         }
     }
-    abstract void playTurn(Board board);
+    abstract void playTurn();
 
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 
+    public List<InstanceCard> getHand() {
+        return hand;
+    }
+
+    public void setHand(List<InstanceCard> hand) {
+        this.hand = hand;
+    }
+
+    public List<InstanceCard> getDeck() {
+        return deck;
+    }
+
+    public void setDeck(List<InstanceCard> deck) {
+        this.deck = deck;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void showHand () {
+        for (InstanceCard card : hand) {
+            System.out.println("[" + hand.indexOf(card) + "] - " + card.getName());
+        }
+    }
+
+    public void place(InstanceCard card , int index, boolean isPlayerSide) {
+        board.placeCard(card, index , isPlayerSide);
+        hand.remove(card);
+    }
+    public void add(InstanceCard card) {
+        hand.add(card);
+    }
 }
