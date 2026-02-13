@@ -42,7 +42,7 @@ public abstract class Player {
             System.out.println("LEFTOVER : "+ a.getName());
         }
     }
-    abstract void playTurn();
+    abstract void playTurn(Board board);
 
 
 }

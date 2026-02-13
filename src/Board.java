@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board {
     public static final int SLOT_SIZE = 4;
 
@@ -57,6 +60,25 @@ public class Board {
             }
         }
 
+    }
+
+    public List<Slot> getListSlot(boolean isPlayerSide) {
+        List<Slot> avslot = new ArrayList<>();
+        if (isPlayerSide) {
+            for (Slot slot : plrSlot) {
+                if (slot.isEmpty()) {
+                    avslot.add(slot);
+                }
+            }
+        } else {
+            for (Slot slot : enemySlot) {
+                if (slot.isEmpty()) {
+                    avslot.add(slot);
+                }
+            }
+        }
+
+        return avslot;
     }
 
 
