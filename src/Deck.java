@@ -7,6 +7,12 @@ public class Deck {
             CardOriginal.JUGGERNAUT, 2,
             CardOriginal.RIFLEMAN,4);
 
+    public static final Map<Card, Integer> ENEMY_DECK = Map.of(
+            CardOriginal.Glitch, 5 ,
+            CardOriginal.TEST_NO2, 4,
+            CardOriginal.CGUARD,5
+    );
+
     public static List<InstanceCard> InitDeck(Map<Card, Integer> deck) {
         List<InstanceCard> deckInstance = new ArrayList<>();
         for (Map.Entry<Card, Integer> a : deck.entrySet()) {

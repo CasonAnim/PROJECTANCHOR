@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -5,6 +6,9 @@ import java.util.Random;
 public class PlayerCPU extends Player{
     private List<Slot> playerBoard;
     private Random rng = new Random();
+    private List<Integer> tempSlot = new ArrayList<>();
+    private int tempdmg =0;
+    private int temp = 0;
     public PlayerCPU(Map<Card, Integer> deck) {
         super(deck);
         for (InstanceCard card : getDeck()) {
@@ -17,23 +21,36 @@ public class PlayerCPU extends Player{
 
     @Override
     void playTurn() {
-        for (Slot slot : board.getPlayerBoard()) {
-            if (slot.isEmpty()) {
-                if (isSelfslotFree(slot)) {
-                    place(getHand().get(getStrongestIndex()), board.getPlrSlot().indexOf(slot), false);
+        if (BattleManager.ENEMYHP < BattleManager.MAXENEMYHP/2) {
+            for (Slot slot : board.getPlayerBoard()) {
+                if (!slot.isEmpty()) {
+                    tempdmg += slot.getCard().getDMG();
+                    tempSlot.add(board.getPlayerBoard().indexOf(slot));
+                }
+            }
+            if (tempdmg >= BattleManager.ENEMYHP) {
+                for (int n : tempSlot) {
+                    if (board.getEnemySlot().get(n).isEmpty()){
+                        place(getHand().get(getWeakestIndex()), n,false);
+                    }
+                }
+            }
+        } else {
+            for (Slot slot : board.getEnemySlot()) {
+                if (slot.isEmpty() && board.getPlrSlot().get(board.getEnemySlot().indexOf(slot)).isEmpty()) {
+                    place(getHand().get(getStrongestIndex()), board.getEnemySlot().indexOf(slot), false);
+                    break;
+                } else if (board.getEnemySlot().get(board.getEnemySlot().indexOf(slot)+1) != null && board.getEnemySlot().get(board.getEnemySlot().indexOf(slot)+1).isEmpty()){
+                    place(getHand().get(getStrongestIndex()), board.getEnemySlot().indexOf(slot)+1, false);
+                    break;
+                } else {
+                    place(getHand().get(getStrongestIndex()), board.getEnemySlot().indexOf(slot), false);
+                    break;
                 }
             }
         }
-        for (Slot slot : board.getPlayerBoard()) {
-            if (slot.isEmpty()) {
-                List<Integer> Ava = board.getIndexAvailableSlotList(false);
-                int rand = rng.nextInt(Ava.size());
-                place(getHand().get(getStrongestIndex()), rand, false);
-            }
-
-        }
-
-
+        tempdmg = 0;
+        tempSlot.clear();
     }
 
     private int getLowestHPIndex() {
@@ -61,6 +78,15 @@ public class PlayerCPU extends Player{
     }
 
     private int getStrongestIndex() {
+        int a = 0;
+        for (InstanceCard card : getHand()) {
+            if (a>card.getDMG()) {
+                a = card.getDMG();
+            }
+        }
+        return a;
+    }
+    private int getWeakestIndex() {
         int a = 0;
         for (InstanceCard card : getHand()) {
             if (a<card.getDMG()) {

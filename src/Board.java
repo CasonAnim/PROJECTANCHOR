@@ -1,12 +1,10 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Board {
     public static final int SLOT_SIZE = 4;
     private List<Slot> temp;
     private List<Slot> tempOppo;
+    private int DirectDMG =0;
 
     private List<Slot> plrSlot = new ArrayList<>();
     private List<Slot> enemySlot = new ArrayList<>();
@@ -16,6 +14,7 @@ public class Board {
             enemySlot.add(new Slot());
         }
     }
+
 
 
     public void placeCard(InstanceCard card, int index, boolean isPlayer) {
@@ -50,6 +49,8 @@ public class Board {
                     if (isDeadorEmpty(tempOppo.get(temp.indexOf(slot)))) {
                         tempOppo.set(temp.indexOf(slot), new Slot());
                     }
+                }else {
+                    DirectDMG += slot.getCard().getDMG();
                 }
             }
         }
@@ -57,7 +58,18 @@ public class Board {
 
     }
 
-
+    public void updateDeadstate() {
+        for (Slot slot : plrSlot) {
+            if (isDeadorEmpty(slot)) {
+                plrSlot.set(plrSlot.indexOf(slot), new Slot());
+            }
+        }
+        for (Slot slot : enemySlot) {
+            if (isDeadorEmpty(slot)) {
+                enemySlot.set(enemySlot.indexOf(slot), new Slot());
+            }
+        }
+    }
     public List<Slot> getPlrSlot() {
         return plrSlot;
     }
@@ -151,6 +163,14 @@ public class Board {
     private void clearState() {
         temp = null;
         tempOppo = null;
+    }
+
+    public void clearDMG() {
+        DirectDMG = 0;
+    }
+
+    public int getDirectDMG() {
+        return DirectDMG;
     }
 
     private  void setSideTempForBattle(boolean isPlayerSide) {

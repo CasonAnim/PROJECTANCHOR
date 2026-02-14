@@ -24,6 +24,8 @@ public class Slot {
         }
     }
 
+
+
     public void setCard(InstanceCard card) {
         this.card = card;
     }
