@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Random;
 
 public abstract class Player {
+    private InstanceCard tempSelect;
     Random rng = new Random();
     Board board;
     public static final int START_NUM = 5;
@@ -15,8 +16,8 @@ public abstract class Player {
         this.hand = new ArrayList<>();
         this.deck = new ArrayList<>();
         this.deck = Deck.InitDeck(deck);
-        Startdraw(this.deck, START_NUM);
-        show();
+//        show();
+
     }
 
     public void Startdraw(List<InstanceCard> deck , int n) {
@@ -30,9 +31,21 @@ public abstract class Player {
     public void draw() {
         int temp = rng.nextInt(0,deck.size());
         hand.add(deck.get(temp));
+
         deck.remove(temp);
     }
+    public InstanceCard getTempSelect() {
+        return tempSelect;
+    }
 
+    public void clearSelect() {
+        tempSelect = null;
+        GlobalListenerManger.getInstance().fireDeSelect();
+    };
+    public void setTempSelect(InstanceCard card) {
+        this.tempSelect = card;
+        System.out.println("Current I Pick " + tempSelect.getName());
+    }
     public void show() {
         for (InstanceCard a : this.hand) {
             System.out.println("HAND : "+a.getName());
@@ -75,10 +88,17 @@ public abstract class Player {
     }
 
     public void place(InstanceCard card , int index, boolean isPlayerSide) {
+        GlobalListenerManger.getInstance().fireonPlacePaint(card,index ,isPlayerSide);
         board.placeCard(card, index , isPlayerSide);
         hand.remove(card);
     }
     public void add(InstanceCard card) {
         hand.add(card);
+    }
+    public void Handremove(InstanceCard card) {
+        hand.remove(card);
+    }
+    public void Deckremove(InstanceCard card) {
+        deck.remove(card);
     }
 }

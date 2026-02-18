@@ -11,16 +11,23 @@ public class PlayerCPU extends Player{
     private int temp = 0;
     public PlayerCPU(Map<Card, Integer> deck) {
         super(deck);
+//        Startdraw(getDeck(), START_NUM);
         for (InstanceCard card : getDeck()) {
             add(card);
-        }
-        for (InstanceCard card : getHand()) {
             System.out.println("BOT - "+ card.getName());
         }
+//        for (InstanceCard card : getHand()) {
+//            System.out.println("BOT - "+ card.getName());
+//        }
     }
 
     @Override
     void playTurn() {
+        if (getHand().size()<=5) {
+            add(new InstanceCard(CardOriginal.CGUARD));
+            add(new InstanceCard(CardOriginal.CGUARD));
+
+        }
         if (BattleManager.ENEMYHP < BattleManager.MAXENEMYHP/2) {
             for (Slot slot : board.getPlayerBoard()) {
                 if (!slot.isEmpty()) {

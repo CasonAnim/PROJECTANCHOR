@@ -2,6 +2,7 @@ public class BattleManager {
     Board board;
     Player player;
     Player CPU;
+
     AnchorInstance anchor;
     static final int MAXENEMYHP = 10;
     static int ENEMYHP = MAXENEMYHP;
@@ -12,6 +13,17 @@ public class BattleManager {
         this.CPU = new PlayerCPU(Deck.ENEMY_DECK);
         this.anchor = anchor;
         updateBoard();
+
+//        GlobalListenerManger.getInstance().onOnplace(((index, isPlayer) -> {
+//            if (player.getTempSelect() != null) {
+//                place(player.getTempSelect(), index, isPlayer);
+//                player.clearSelect();
+//                show();
+//                player.showHand();
+//            } else {
+//                System.out.println("Select something");
+//            }
+//        }));
     }
 
 
@@ -22,10 +34,20 @@ public class BattleManager {
         System.out.println("Enemy HP : " + ENEMYHP);
     }
     public void place(Card card, int index ,boolean isPlayer) {
+        System.out.println("Temp : " + player.getTempSelect().getName());
         board.placeCard(new InstanceCard(card) , index , isPlayer);
         updateBoard();
+        System.out.println("Temp : " + player.getTempSelect().getName());
     }
-
+    public void place(InstanceCard card, int index ,boolean isPlayer) {
+        System.out.println("Temp : " + player.getTempSelect().getName());
+        board.placeCard(card , index , isPlayer);
+        updateBoard();
+        System.out.println("Temp : " + player.getTempSelect().getName());
+    }
+    public void execute() {
+        execute(true);
+    }
     public void Init() {
         while (true) {
             player.playTurn();
@@ -34,13 +56,13 @@ public class BattleManager {
             execute(true);
             anchor.ability(board);
             updateStatusPlayer(true);
-            show();
-            CPU.playTurn();
+//            show();
+//            CPU.playTurn();
             updateBoard();
             execute(false);
             anchor.ability(board);
             updateStatusPlayer(false);
-            show();
+//            show();
             if (checksomeonedie()) {
                 if (playerDead()) {
                     System.out.println("CPU win");

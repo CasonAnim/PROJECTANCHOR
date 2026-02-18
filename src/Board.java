@@ -13,18 +13,29 @@ public class Board {
             plrSlot.add(new Slot());
             enemySlot.add(new Slot());
         }
+
+        GlobalListenerManger.getInstance().onSelectListener(e -> {
+            FireDisplayEmpty();
+        });
+
     }
 
 
-
+    public void FireDisplayEmpty() {
+        GlobalListenerManger.getInstance().fireIsSlotEmpty(getIndexAvailableSlotList(true));
+        System.out.println(getIndexAvailableSlotList(true));
+    }
     public void placeCard(InstanceCard card, int index, boolean isPlayer) {
         Checker(index);
         if (isPlayer) {
             plrSlot.get(index).setCard(card);
+
         } else {
             enemySlot.get(index).setCard(card);
         }
+        showBoard();
     }
+
     public Slot getSlot(boolean isPlyaerside, int index) {
         Checker(index);
 
@@ -103,7 +114,9 @@ public class Board {
         SetSideForLoop(isPlayerSide);
         List<Integer> index = new ArrayList<>();
         for (Slot slot : temp) {
-            index.add(temp.indexOf(slot));
+            if (slot.isEmpty()) {
+                index.add(temp.indexOf(slot));
+            }
         }
         clearState();
         return index;

@@ -5,10 +5,33 @@ import java.util.Scanner;
 public class User extends Player{
     private List<Integer> tempAva;
     private int selec;
+
     Scanner scanner = new Scanner(System.in);
-    public User(Map<Card, Integer> deck) {
+    public User(Map<Card, Integer> deck ) {
         super(deck);
+        Startdraw(getDeck(), START_NUM);
+
+        GlobalListenerManger.getInstance().onDrawListener(() -> {
+            draw();
+        });
+        GlobalListenerManger.getInstance().onSelectListener(e -> {
+                setTempSelect(e);
+        });
+
+        GlobalListenerManger.getInstance().onOnplace(((index, isPlayer) -> {
+            if (getTempSelect() != null) {
+                place(getTempSelect(), index, isPlayer);
+                clearSelect();
+                show();
+                showHand();
+            } else {
+                System.out.println("Select something");
+            }
+        }));
     }
+
+
+
 
     @Override
     void playTurn() {
@@ -16,6 +39,13 @@ public class User extends Player{
         System.out.println("[1] - Draw");
         System.out.println("[2] - Place");
         Decidetion(scanner.nextInt());
+    }
+
+
+    @Override
+    public void place(InstanceCard card, int index, boolean isPlayerSide) {
+        super.place(card, index, isPlayerSide);
+        GlobalListenerManger.getInstance().fireOnRemove(index);
     }
 
     private void Decidetion(int n) {
@@ -52,5 +82,40 @@ public class User extends Player{
     private void selectCard(int index) {
         place(getHand().get(index), selec , true);
     }
+
+
+    @Override
+    public void draw() {
+        InstanceCard curCard = null;
+        if (getDeck().size() == 1) {
+            curCard = getDeck().getFirst();
+            Deckremove(curCard);
+            add(curCard);
+            System.out.println("Deckout");
+        } else if(getDeck().size()>=2) {
+            curCard = getDeck().get(rng.nextInt(0,getDeck().size()));
+            Deckremove(curCard);
+            add(curCard);
+        } else {
+            System.out.println("DECKOUT");
+        }
+
+        if (curCard != null) {
+            System.out.println(curCard.getName());
+            GlobalListenerManger.getInstance().fireAddCard(curCard);
+        }
+
+
+        show();
+    }
+
+    @Override
+    public void Startdraw(List<InstanceCard> deck, int n) {
+        super.Startdraw(deck, n);
+        for (InstanceCard card : getHand()) {
+            GlobalListenerManger.getInstance().fireAddCard(card);
+        }
+    }
+
 
 }
