@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class SlotDisplay extends JPanel {
     Collector<FramewCrad> list = new Collector<>();
@@ -53,8 +54,17 @@ public class SlotDisplay extends JPanel {
         }
     }
 
-    public void isContain() {
-
+    public ArrayList<FramewCrad> getListofPEmptyandSac() {
+        ArrayList<FramewCrad> temp = new ArrayList<>();
+        for (FramewCrad i : list.getList()) {
+            if (i.isEmpty || i.isSac()) {
+                temp.add(i);
+            }
+        }
+        return temp;
+    }
+    public void sacrificeable(int index) {
+        list.getData(index).setSacrificeable();
     }
 
 
@@ -64,6 +74,7 @@ public class SlotDisplay extends JPanel {
         }
     }
 
+
     public void Available(int index) {
         list.getData(index).setAvailable();
     }
@@ -72,6 +83,7 @@ public class SlotDisplay extends JPanel {
         a.setNametag(card.getName());
         a.setDMG(String.valueOf(card.getDMG()));
         a.setHpText(String.valueOf(card.getHP()));
+        a.setID(card);
         a.setVisible();
         a.removeBoarder();
         a.setEmptyStatus(false);

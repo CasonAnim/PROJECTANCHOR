@@ -7,6 +7,8 @@ public class FramewCrad extends JPanel {
     Font font15 = new Font("Arial", Font.BOLD, 15);
     String name;
     boolean isEmpty;
+    private boolean isSac;
+    private boolean isSacSwitch;
     JLabel nametag = new JLabel("PLACEHOLDER");
     JLabel charpic = new JLabel();
     JLabel dmgText = new JLabel("0");
@@ -14,9 +16,10 @@ public class FramewCrad extends JPanel {
     JLabel hpText = new JLabel("0");
     JLabel hpIcon = new JLabel();
     JButton buttonselect = new JButton();
-    JButton placable = new JButton();
-    JLabel frame = new JLabel();
-    InstanceCard ID = null;
+    private JButton sacrifice = new JButton();
+    private JButton placable = new JButton();
+    private JLabel frame = new JLabel();
+    private InstanceCard ID = null;
     private ImageIcon cardframe = new ImageIcon("asset/texture/cardframe.png");
     private ImageIcon aticon = new ImageIcon("asset/texture/aticon.png");
     private ImageIcon hpicon = new ImageIcon("asset/texture/hpicon.png");
@@ -27,6 +30,7 @@ public class FramewCrad extends JPanel {
 
         butty.add(placable);
         butty.add(buttonselect);
+        butty.add(sacrifice);
         c.add(nametag);
         c.add(charpic);
         c.add(hpIcon);
@@ -67,13 +71,27 @@ public class FramewCrad extends JPanel {
         this.setLayout(null);
         placable.addActionListener(e -> {
             System.out.println("place!");
-            GlobalListenerManger.getInstance().fireOnplace(Integer.parseInt(name),true);
+            isSac = false;
+            GlobalListenerManger.getInstance().fireOnplace(Integer.parseInt(name),true, ID);
+
         });
 
         this.setBackground(Color.WHITE);
 //        this.nametag.setVisible(true)
+        sacrifice.addActionListener(e -> {
+            if (isSacSwitch) {
+                isSac = true;
+            }
+            System.out.println(ID.getName() + "gonna get sacrifice");
+            fireValue();
+            sacrifice.setEnabled(false);
+            setBorder(BorderFactory.createLineBorder(Color.WHITE , 2));
+        });
 
+    }
 
+    public void setID(InstanceCard ID) {
+        this.ID = ID;
     }
 
     @Override
@@ -85,20 +103,44 @@ public class FramewCrad extends JPanel {
     public String getName() {
         return name;
     }
+    public void setSacrificeable() {
+        for (JButton button : butty) {
+            button.setVisible(false);
+        }
+        sacrifice.setVisible(true);
+        sacrifice.setEnabled(true);
+        this.setBorder(BorderFactory.createLineBorder(Color.RED , 5));
+        isSacSwitch = true;
+    }
 
+    public void setPlacable() {
+        for (JButton comp : butty) {
+            comp.setVisible(false);
+        }
+        placable.setEnabled(true);
+        placable.setVisible(true);
+
+    }
     public void setEmpty() {
         for (Component comp : c) {
             comp.setVisible(false);
         }
-        buttonselect.setContentAreaFilled(false);
-        buttonselect.setFocusPainted(false);
-        buttonselect.setEnabled(false);
+//        buttonselect.setContentAreaFilled(false);
+//        buttonselect.setFocusPainted(false);
+//        buttonselect.setEnabled(false);
         isEmpty = true;
+        setBorder(BorderFactory.createLineBorder(Color.WHITE , 2));
+    }
+    public void resetSac() {
+        isSac = false;
     }
 
+//    public void
+
     public void setAvailable() {
-        this.setBorder(BorderFactory.createLineBorder(Color.RED , 5));
+        this.setBorder(BorderFactory.createLineBorder(Color.WHITE , 5));
         buttonselect.setVisible(false);
+        sacrifice.setVisible(false);
         placable.setEnabled(true);
         placable.setVisible(true);
     }
@@ -106,6 +148,7 @@ public class FramewCrad extends JPanel {
         placable.setVisible(false);
         buttonselect.setEnabled(true);
     }
+
     public void Enim() {
         this.buttonselect.setEnabled(false);
     }
@@ -140,6 +183,7 @@ public class FramewCrad extends JPanel {
         UIHelper.apply(hpIcon, 0.25 , 0, 1 ,0 ,0.15, 0 ,0.6 ,0,1,0);
         UIHelper.apply(hpText, 0.25 , 0, 1 ,0 ,0.3, 0 ,0.65 ,0,1,0);
         UIHelper.apply(buttonselect, 1 , 0, 0 ,0 ,1, 0 ,0,0);
+        UIHelper.apply(sacrifice, 1 , 0, 0 ,0 ,1, 0 ,0,0);
         UIHelper.apply(placable, 1 , 0, 0 ,0 ,1, 0 ,0,0);
         UIHelper.apply(frame, 1,0,0,0,1,0,0,0);
     }
@@ -166,9 +210,18 @@ public class FramewCrad extends JPanel {
         }
         setBorder(BorderFactory.createLineBorder(Color.WHITE , 2));
     }
+
+    public boolean isSac() {
+        return isSac;
+    }
+
     public void placed() {
         for (JButton b : butty) {
             b.setVisible(false);
         }
+    }
+
+    public void fireValue() {
+        GlobalListenerManger.getInstance().fireSacrificeSelectListener(ID);
     }
 }

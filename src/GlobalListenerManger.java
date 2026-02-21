@@ -10,9 +10,21 @@ public class GlobalListenerManger {
     private DeSlectListener deSlectListener;
     private isSlotEmptyRequest isSlotEmptyRequest;
     private onSmthTst onSmthTst;
-    private List<onRemove> onRemove = new ArrayList<>();
+    private List<onRemovefromhand> onRemovefromhand = new ArrayList<>();
     private OnPlace onPlace;
     private List<onPlacePaint> onPlacePaint = new ArrayList<>();
+    private onEndTurn onendTurn;
+    private DeathListener ondeath;
+    private TakeDMGListener takeDMGListener;
+    private SacrificeableListener sacrificeableListener;
+    private SacrificeSelectListener sacrificeSelectListener;
+    private onSacrificeplaceable onSacrificeplaceable;
+    private DisableListener disableListener;
+    private EndturnListener endturnListener;
+    private AfterBattleListener afterBattleListener;
+    private GameResultListener gameResultListener;
+    private UIListener uiListener;
+
 
     private GlobalListenerManger() {}
 
@@ -22,6 +34,108 @@ public class GlobalListenerManger {
         }
         return instance;
     }
+
+    public void onSacrificeable(SacrificeableListener sacrificeableListener) {
+        this.sacrificeableListener = sacrificeableListener;
+    }
+
+    public void fireOnSacrificeable(List<Integer> list) {
+        if (sacrificeableListener != null) {
+            sacrificeableListener.onSac(list);
+        }
+    }
+
+    public void onsacrificeplaceable(onSacrificeplaceable onSacrificeplaceable) {
+        this.onSacrificeplaceable = onSacrificeplaceable;
+    }
+
+
+
+    public void firesacrificeplaceable(List<InstanceCard> list) {
+        if (onSacrificeplaceable != null) {
+            onSacrificeplaceable.onplace(list);
+        }
+    }
+
+
+    public void onUiListener(UIListener uiListener) {
+        this.uiListener = uiListener;
+    }
+
+    public void fireUiListener(int index) {
+        if (uiListener != null) {
+            uiListener.onMove(index);
+        }
+    }
+
+    public void onGameResult (GameResultListener gameResultListener) {
+        this.gameResultListener = gameResultListener;
+    }
+
+    public void fireGameResult (boolean isPlayerWin) {
+        if (gameResultListener != null) {
+            gameResultListener.onResult(isPlayerWin);
+        }
+    }
+
+
+    public void onAfterBattleListener(AfterBattleListener afterBattleListener) {
+        this.afterBattleListener = afterBattleListener;
+    }
+    public void fireAfterBattleListener(int HP, boolean isPlayer) {
+        if (afterBattleListener != null) {
+            afterBattleListener.onAfterBattle(HP, isPlayer);
+        }
+    }
+
+    public void onBotEndTurn(EndturnListener endturnListener) {
+        this.endturnListener = endturnListener;
+    }
+
+    public void fireBotEndTurn() {
+        if (endturnListener != null) {
+            endturnListener.onEnd();
+        }
+    }
+
+
+    public void onDisableListener(DisableListener disableListener) {
+        this.disableListener = disableListener;
+    }
+    public void fireDisableListener() {
+        if (disableListener != null) {
+            disableListener.Stop();
+        }
+    }
+
+    public void onSacrificeSelectListener(SacrificeSelectListener sacrificeSelectListener) {
+        this.sacrificeSelectListener = sacrificeSelectListener;
+    }
+    public void fireSacrificeSelectListener(InstanceCard card) {
+        if (sacrificeSelectListener != null) {
+            sacrificeSelectListener.saggy(card);
+        }
+    }
+
+    public void onDeath(DeathListener ondeath) {
+        this.ondeath = ondeath;
+    }
+
+    public void fireDeath(int index ,boolean isPlayerSide) {
+        if (ondeath != null) {
+            ondeath.ded(index, isPlayerSide);
+        }
+    }
+    public void ontakeDMG(TakeDMGListener takeDMGListener) {
+        this.takeDMGListener = takeDMGListener;
+    }
+
+    public void firetakeDMG(int index,InstanceCard card, boolean isPlayerSide) {
+        if (takeDMGListener != null) {
+            takeDMGListener.dmg(index ,card , isPlayerSide);
+        }
+    }
+
 
     public void onSelectListener(SelectListener selectListener) {
         this.selectListener.add(selectListener);
@@ -47,19 +161,21 @@ public class GlobalListenerManger {
         this.onPlacePaint.add(onPlacePaint);
     }
 
-    public void fireOnplace(int index, boolean isPlayer) {
+    public void fireOnplace(int index, boolean isPlayer, InstanceCard card) {
         if (onPlace != null) {
-            onPlace.onplace(index,isPlayer);
+            onPlace.onplace(index,isPlayer, card);
         }
     }
+
+
 
     public void onDrawListener(DrawListener drawListener) {
         this.drawListener = drawListener;
     }
 
-    public void fireDrawCard() {
+    public void fireDrawCard(boolean isDrawCell) {
         if (drawListener != null) {
-            drawListener.onDraw();
+            drawListener.onDraw(isDrawCell);
         }
     }
 
@@ -113,13 +229,22 @@ public class GlobalListenerManger {
         }
     }
 
-    public void OnonRemove(onRemove onRemove) {
-        this.onRemove.add(onRemove);
+    public void OnonRemovefromHand(onRemovefromhand onRemovefromhand) {
+        this.onRemovefromhand.add(onRemovefromhand);
     }
 
-    public void fireOnRemove(int index) {
-        for (onRemove event : onRemove) {
-            event.onRemovem(index);
+    public void fireOnRemovefromhand(InstanceCard card) {
+        for (onRemovefromhand event : onRemovefromhand) {
+            event.onRemovem(card);
+        }
+    }
+
+    public void onEndturn(onEndTurn onendTurn) {
+        this.onendTurn = onendTurn;
+    }
+    public void  fireEndTurn() {
+        if (onendTurn != null) {
+            onendTurn.end();
         }
     }
 }

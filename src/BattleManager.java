@@ -4,6 +4,7 @@ public class BattleManager {
     Player CPU;
 
     AnchorInstance anchor;
+    boolean isGameEnd;
     static final int MAXENEMYHP = 10;
     static int ENEMYHP = MAXENEMYHP;
 
@@ -13,17 +14,16 @@ public class BattleManager {
         this.CPU = new PlayerCPU(Deck.ENEMY_DECK);
         this.anchor = anchor;
         updateBoard();
+        player.showHand();
 
-//        GlobalListenerManger.getInstance().onOnplace(((index, isPlayer) -> {
-//            if (player.getTempSelect() != null) {
-//                place(player.getTempSelect(), index, isPlayer);
-//                player.clearSelect();
-//                show();
-//                player.showHand();
-//            } else {
-//                System.out.println("Select something");
-//            }
-//        }));
+        GlobalListenerManger.getInstance().onEndturn(() -> {
+            if (isGameEnd) {
+                System.out.println("Game has been Finised");
+            } else {
+                Init2();
+                show();
+            }
+        });
     }
 
 
@@ -45,9 +45,35 @@ public class BattleManager {
         updateBoard();
         System.out.println("Temp : " + player.getTempSelect().getName());
     }
-    public void execute() {
-        execute(true);
+
+    public void Init2() {
+        board.play(true);
+        board.updateDeadstate();
+
+//        updateBoard();
+        anchor.ability(board);
+        board.updateDeadstate();
+        updateStatusPlayer(true);
+        checkgameResult();
+
+//        updateBoard();
+        if (!isGameEnd) {
+            CPU.playTurn();
+            board.updateDeadstate();
+//        updateBoard();
+            execute(false);
+            board.updateDeadstate();
+//        anchor.ability(board);
+//        board.updateDeadstate();
+            updateStatusPlayer(false);
+            checkgameResult();
+        }
+//        else {
+//            System.out.println("Game has been Finised");
+//        }
+
     }
+
     public void Init() {
         while (true) {
             player.playTurn();
@@ -77,6 +103,7 @@ public class BattleManager {
     public void updateBoard() {
         CPU.setBoard(this.board);
         player.setBoard(this.board);
+
     }
     private void execute(boolean isPlayer) {
         board.play(isPlayer);
@@ -84,8 +111,22 @@ public class BattleManager {
     private boolean playerDead() {
         return anchor.selfHP == 0;
     }
+
+    private void checkgameResult() {
+        if (checksomeonedie()) {
+            isGameEnd = true;
+            if (playerDead()) {
+                System.out.println("CPU win");
+                GlobalListenerManger.getInstance().fireGameResult(false);
+            } else {
+                System.out.println("Player win");
+                GlobalListenerManger.getInstance().fireGameResult(true);
+            }
+        }
+    }
+
     private boolean checksomeonedie() {
-        return anchor.selfHP == 0 || ENEMYHP == 0;
+        return anchor.selfHP == 0 || ENEMYHP <= 0;
     }
     private void updateStatusPlayer(boolean isPlayerside) {
         System.out.println("Direct : " + board.getDirectDMG());
@@ -99,6 +140,7 @@ public class BattleManager {
             }
             ENEMYHP -= board.getDirectDMG();
 
+
 //            anchor.selfHP+=board.getDirectDMG();
 
         } else {
@@ -109,6 +151,8 @@ public class BattleManager {
             }
             anchor.takeDMG(board.getDirectDMG());
         }
+        GlobalListenerManger.getInstance().fireAfterBattleListener(anchor.selfHP, true);
+        GlobalListenerManger.getInstance().fireAfterBattleListener(ENEMYHP, false);
         board.clearDMG();
     }
 }

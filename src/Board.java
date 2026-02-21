@@ -14,13 +14,26 @@ public class Board {
             enemySlot.add(new Slot());
         }
 
-        GlobalListenerManger.getInstance().onSelectListener(e -> {
-            FireDisplayEmpty();
-        });
 
     }
 
+    public void setEmpty(int index , boolean isPlayer) {
+        if (isPlayer) {
+            plrSlot.set(index , new Slot());
 
+            if (plrSlot.get(index).isEmpty()) {
+                System.out.println("Removed");
+            }
+        }else {
+            enemySlot.set(index , new Slot());
+
+            if (enemySlot.get(index).isEmpty()) {
+                System.out.println("Removed");
+            }
+        }
+        updateDeadstate();
+
+    }
     public void FireDisplayEmpty() {
         GlobalListenerManger.getInstance().fireIsSlotEmpty(getIndexAvailableSlotList(true));
         System.out.println(getIndexAvailableSlotList(true));
@@ -29,6 +42,7 @@ public class Board {
         Checker(index);
         if (isPlayer) {
             plrSlot.get(index).setCard(card);
+
 
         } else {
             enemySlot.get(index).setCard(card);
@@ -44,6 +58,7 @@ public class Board {
         } else {
             return enemySlot.get(index);
         }
+
     }
 
     public List<Slot> getPlayerBoard() {
@@ -54,6 +69,7 @@ public class Board {
         setSideTempForBattle(isPlayerSide);
 
         for (Slot slot : temp) {
+
             if (!slot.isEmpty()) {
                 if (!(tempOppo.get(temp.indexOf(slot)).isEmpty())) {
                     slot.getCard().Attack(tempOppo.get(temp.indexOf(slot)));
@@ -71,13 +87,21 @@ public class Board {
 
     public void updateDeadstate() {
         for (Slot slot : plrSlot) {
+            int indexofSlot = plrSlot.indexOf(slot);
             if (isDeadorEmpty(slot)) {
                 plrSlot.set(plrSlot.indexOf(slot), new Slot());
+                GlobalListenerManger.getInstance().fireDeath(indexofSlot, true);
+            } else {
+                GlobalListenerManger.getInstance().firetakeDMG(indexofSlot, slot.getCard(), true);
             }
         }
         for (Slot slot : enemySlot) {
+            int indexofSlot = enemySlot.indexOf(slot);
             if (isDeadorEmpty(slot)) {
                 enemySlot.set(enemySlot.indexOf(slot), new Slot());
+                GlobalListenerManger.getInstance().fireDeath(indexofSlot, false);
+            } else {
+                GlobalListenerManger.getInstance().firetakeDMG(indexofSlot, slot.getCard(), false);
             }
         }
     }
@@ -121,6 +145,18 @@ public class Board {
         clearState();
         return index;
     }
+    public List<Integer> getIndexUnavailableSlotList(boolean isPlayerSide) {
+        SetSideForLoop(isPlayerSide);
+        List<Integer> index = new ArrayList<>();
+        for (Slot slot : temp) {
+            if (!slot.isEmpty()) {
+                index.add(temp.indexOf(slot));
+            }
+        }
+        clearState();
+        return index;
+    }
+
 
     public boolean isDeadorEmpty(Slot slot) {
         if (!slot.isEmpty()){

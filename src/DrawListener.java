@@ -1,3 +1,3 @@
 public interface DrawListener {
-    void onDraw();
+    void onDraw(boolean isDrawCell);
 }

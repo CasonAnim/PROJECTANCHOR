@@ -88,7 +88,7 @@ public abstract class Player {
     }
 
     public void place(InstanceCard card , int index, boolean isPlayerSide) {
-        GlobalListenerManger.getInstance().fireonPlacePaint(card,index ,isPlayerSide);
+        GlobalListenerManger.getInstance().fireonPlacePaint(card,index ,isPlayerSide );
         board.placeCard(card, index , isPlayerSide);
         hand.remove(card);
     }

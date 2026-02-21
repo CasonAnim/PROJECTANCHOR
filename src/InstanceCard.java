@@ -2,6 +2,7 @@ public class InstanceCard {
     private Card card;
     private int selfHP;
 
+
     public InstanceCard(Card card ) {
         this.card = card;
         this.selfHP = card.getMaxHP();
@@ -44,5 +45,13 @@ public class InstanceCard {
     }
     public int getDMG() {
         return this.card.getAT();
+    }
+
+    public int getSelfHP() {
+        return selfHP;
+    }
+
+    public int getCost() {
+        return card.getCost();
     }
 }

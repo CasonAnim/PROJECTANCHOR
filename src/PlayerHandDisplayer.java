@@ -14,16 +14,22 @@ public class PlayerHandDisplayer extends JPanel {
     PlayerHandDisplayer() {
         this.setLayout(null);
 
-        GlobalListenerManger.getInstance().OnonRemove(e -> {
-
-            System.out.println("Array : " + card.size());
-            System.out.println("request Index : " + e);
-            FramewCrad a = framewCrads.get(e);
-            InstanceCard b = card.get(e);
-            card.remove(b);
-            framewCrads.remove(a);
-            this.remove(a);
+        GlobalListenerManger.getInstance().OnonRemovefromHand(e -> {
+            int index = card.indexOf(e);
+            System.out.println("Index In hand is "+index);
+            this.remove(framewCrads.get(index));
+            framewCrads.remove(index);
+            card.remove(index);
             updateHand();
+
+//            System.out.println("Array : " + card.size());
+//            System.out.println("request Index : " + e);
+//            FramewCrad a = framewCrads.get(e);
+//            InstanceCard b = card.get(e);
+//            card.remove(b);
+//            framewCrads.remove(a);
+//            this.remove(a);
+//            updateHand();
         });
 
         GlobalListenerManger.getInstance().onCardPaint((e,v) -> {
@@ -33,6 +39,7 @@ public class PlayerHandDisplayer extends JPanel {
         });
         this.setBackground(new Color(69, 57, 97));
         GlobalListenerManger.getInstance().onAddListener(e -> {
+            System.out.println("1");
             card.add(e);
             FramewCrad Frame = new FramewCrad();
 
@@ -41,7 +48,7 @@ public class PlayerHandDisplayer extends JPanel {
             System.out.println("Construct Card no. " + Frame.name);
             framewCrads.get(card.indexOf(e)).BindCard(e);
             this.add(Frame);
-            UIHelper.apply(Frame, 0.25,0,card.indexOf(e)*0.1,0,1,0,0,0);
+            UIHelper.apply(Frame, 0.25,0,card.indexOf(e)*0.05,0,1,0,0,0);
             Frame.UpdateDisplay();
             Frame.yued();
             GlobalListenerManger.getInstance().fireCardpaint(Frame, e);
@@ -68,7 +75,7 @@ public class PlayerHandDisplayer extends JPanel {
     }
     public void updateHand() {
         for (InstanceCard c : card) {
-            UIHelper.apply(framewCrads.get(card.indexOf(c)), 0.25,0,card.indexOf(c)*0.1,0,1,0,0,0);
+            UIHelper.apply(framewCrads.get(card.indexOf(c)), 0.25,0,card.indexOf(c)*0.05,0,1,0,0,0);
         }
     }
 

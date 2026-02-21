@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -5,20 +6,49 @@ import java.util.Scanner;
 public class User extends Player{
     private List<Integer> tempAva;
     private int selec;
+    private int indexPlaced = 0;
+    private int cost = 0;
+    private List<InstanceCard> current = new ArrayList<>();
 
     Scanner scanner = new Scanner(System.in);
     public User(Map<Card, Integer> deck ) {
         super(deck);
         Startdraw(getDeck(), START_NUM);
+        add(new InstanceCard(CardOriginal.CELL));
+        GlobalListenerManger.getInstance().onSacrificeSelectListener(e-> {
+                current.add(e);
+                System.out.println("Budget" + current.size());
 
-        GlobalListenerManger.getInstance().onDrawListener(() -> {
-            draw();
+                if (cost == current.size()) {
+                    SacPlace();
+                } else {
+                    fireSacrificeable();
+                }
+        });
+
+        GlobalListenerManger.getInstance().onDrawListener(e -> {
+            if (e) {
+                add(new InstanceCard(CardOriginal.CELL));
+            } else {
+                draw();
+            }
+
         });
         GlobalListenerManger.getInstance().onSelectListener(e -> {
+                current.clear();
                 setTempSelect(e);
+                cost = e.getCost();
+                System.out.println("Cost : " + cost);
+                System.out.println("Budget" + current.size());
+                if (cost <= current.size()) {
+                    fireEmpty();
+                } else {
+                    fireDisable();
+                    fireSacrificeable();
+                }
         });
 
-        GlobalListenerManger.getInstance().onOnplace(((index, isPlayer) -> {
+        GlobalListenerManger.getInstance().onOnplace(((index, isPlayer , card) -> {
             if (getTempSelect() != null) {
                 place(getTempSelect(), index, isPlayer);
                 clearSelect();
@@ -31,8 +61,15 @@ public class User extends Player{
     }
 
 
-
-
+    public void fireEmpty() {
+        GlobalListenerManger.getInstance().fireIsSlotEmpty(board.getIndexAvailableSlotList(true));
+    }
+    public void fireDisable() {
+        GlobalListenerManger.getInstance().fireDisableListener();
+    }
+    public void fireSacrificeable() {
+        GlobalListenerManger.getInstance().fireOnSacrificeable(board.getIndexUnavailableSlotList(true));
+    }
     @Override
     void playTurn() {
         System.out.println("Choose What u gonna do");
@@ -41,11 +78,45 @@ public class User extends Player{
         Decidetion(scanner.nextInt());
     }
 
+    public void SacPlace() {
+        GlobalListenerManger.getInstance().firesacrificeplaceable(current);
+    }
+
+    public void checkCanplace() {
+        if (cost <= current.size()) {
+            fireEmpty();
+        } else {
+            fireSacrificeable();
+        }
+    }
+
+    @Override
+    public void add(InstanceCard card) {
+        super.add(card);
+        GlobalListenerManger.getInstance().fireAddCard(card);
+    }
+    public void fireAdd(InstanceCard card) {
+        GlobalListenerManger.getInstance().fireAddCard(card);
+    }
 
     @Override
     public void place(InstanceCard card, int index, boolean isPlayerSide) {
         super.place(card, index, isPlayerSide);
-        GlobalListenerManger.getInstance().fireOnRemove(index);
+        for (Slot slot : board.getPlrSlot()) {
+            if (current.contains(slot.getCard()) && board.getPlrSlot().indexOf(slot) != index) {
+                int SacIndex = board.getPlrSlot().indexOf(slot);
+                System.out.println("contain : " + slot.getCard().getName() + "in sacrifice || Index : " + board.getPlrSlot().indexOf(slot));
+                board.setEmpty(SacIndex, true);
+            }
+        }
+        GlobalListenerManger.getInstance().fireOnRemovefromhand(card);
+    }
+    public void Destroy() {
+
+    }
+
+    public void Remove() {
+
     }
 
     private void Decidetion(int n) {
@@ -98,11 +169,6 @@ public class User extends Player{
             add(curCard);
         } else {
             System.out.println("DECKOUT");
-        }
-
-        if (curCard != null) {
-            System.out.println(curCard.getName());
-            GlobalListenerManger.getInstance().fireAddCard(curCard);
         }
 
 

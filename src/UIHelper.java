@@ -64,12 +64,13 @@ public class UIHelper {
         int y = (int) (PosscaleY * parentH) + PosoffsetY;
         int w = (int) (SizescaleX * parentW) + SizeoffsetX;
         int d = (int) (SizescaleY * parentH) + SizeoffsetY;
-//        System.out.println("PX : " + parentH);
-//        System.out.println("PY : " + parentW);
-//        System.out.println("X : " + x);
-//        System.out.println("Y : " + y);
-//        System.out.println("W : " + w);
-//        System.out.println("H : " + d);
+        System.err.println(comp.getName());
+        System.out.println("PX : " + parentH);
+        System.out.println("PY : " + parentW);
+        System.out.println("X : " + x);
+        System.out.println("Y : " + y);
+        System.out.println("W : " + w);
+        System.out.println("H : " + d);
         comp.setBounds(x, y , w ,d);
 
     };
