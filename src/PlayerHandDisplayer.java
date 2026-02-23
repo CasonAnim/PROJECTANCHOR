@@ -63,6 +63,8 @@ public class PlayerHandDisplayer extends JPanel {
             UIHelper.apply(Frame, 0.25,0,card.indexOf(e)*0.05,0,1,0,0,0);
             Frame.UpdateDisplay();
             Frame.yued();
+            Frame.setCharAva(e.getCard().getPic());
+            Frame.setCellcost(e.getCost());
             GlobalListenerManger.getInstance().fireCardpaint(Frame, e);
             Frame.removeBoarder();
             Frame.buttonselect.addMouseListener(new MouseAdapter() {

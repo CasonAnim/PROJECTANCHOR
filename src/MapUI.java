@@ -39,10 +39,14 @@ public class MapUI extends JPanel {
                     if (Channel==0) {
                         GlobalListenerManger.getInstance().FireRemoteEvent(1, currentStage);
                     } else if (Channel == 2) {
-                        if ((boolean) data) {
-                            currentStage++;
+                        if (currentStage==4) {
+                            GlobalListenerManger.getInstance().FireRemoteEvent(7, null);
                         } else {
-                            currentStage=0;
+                            if ((boolean) data) {
+                                currentStage++;
+                            } else {
+                                currentStage = 0;
+                            }
                         }
                     }
                 }
@@ -93,6 +97,7 @@ public class MapUI extends JPanel {
                 System.out.println("[NO SAVE FOUND]");
                 player.ResetTemplate(Deck.STARTER_DECK);
                 player.reInit();
+
             }else {
                 System.out.println("[SAVE FOUND]");
                 for (Map.Entry<Card, Integer> entry : deck.entrySet()) {

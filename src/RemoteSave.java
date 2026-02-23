@@ -9,5 +9,6 @@ public interface RemoteSave {
     // 4 - Added Reward to playerDeck
     // 5 - Send Load up LoadSave menu
     // 6 - Load up progress
+    // 7 - Thank you for playing
 
 }

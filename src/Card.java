@@ -3,12 +3,18 @@ public class Card {
     private int maxHP;
     private int AT;
     private int cost;
+    private String pic;
 
-    public Card(String name, int maxHP, int AT, int cost) {
+    public Card(String name, int maxHP, int AT, int cost , String pic) {
         this.name = name;
         this.maxHP = maxHP;
         this.AT = AT;
         this.cost = cost;
+        this.pic = pic;
+    }
+
+    public String getPic() {
+        return pic;
     }
 
     public String getName() {

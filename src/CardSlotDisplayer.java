@@ -6,11 +6,11 @@ import java.util.List;
 public class CardSlotDisplayer extends JPanel {
     private SlotDisplay plrSlot = new SlotDisplay();
     private SlotDisplay enemySlot = new SlotDisplay();
-    private BarDisplay Health = new BarDisplay(new Color(121, 88, 184));
+    private BarDisplay Health = new BarDisplay(new Color(177, 137, 253));
     private BarDisplay EnimHealth = new BarDisplay(new Color(0, 230, 255));
 
     CardSlotDisplayer() {
-        this.setBackground(new Color(69, 57, 97));
+        this.setBackground(new Color(99, 76, 147));
         this.setLayout(null);
         this.add(plrSlot);
         this.add(enemySlot);
@@ -82,8 +82,16 @@ public class CardSlotDisplayer extends JPanel {
             }
         });
         GlobalListenerManger.getInstance().onIsSlotEmptyRequest(e -> {
-            for (int i : e) {
-                plrSlot.Available(i);
+            for (int i = 0; i < Board.SLOT_SIZE; i++) {
+                FramewCrad m =plrSlot.getList().getData(i);
+                if (m.isEmpty) {
+                    System.out.println(i + " || Empty");
+                    m.setAvailable();
+                } else {
+                    m.clearplaceableCardon();
+                    System.out.println(i + " || UnAvailable");
+
+                }
             }
         });
         GlobalListenerManger.getInstance().ontakeDMG((index,card ,isPlayerSide) -> {
@@ -114,6 +122,7 @@ public class CardSlotDisplayer extends JPanel {
             for (FramewCrad crad : plrSlot.getList().getList()) {
                 if (crad.isEmpty) {
                     crad.clearplaceable();
+
                 }
             }
         });

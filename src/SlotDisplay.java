@@ -86,6 +86,8 @@ public class SlotDisplay extends JPanel {
         a.setID(card);
         a.setVisible();
         a.removeBoarder();
+        a.setCharAva(card.getCard().getPic());
+        a.setCellcost(card.getCost());
         a.setEmptyStatus(false);
     }
 }

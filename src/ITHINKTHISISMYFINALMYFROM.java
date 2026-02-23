@@ -4,12 +4,14 @@ import java.awt.*;
 public class ITHINKTHISISMYFINALMYFROM extends JFrame {
     MainUI mainUI =new MainUI();
     ITHINKTHISISMYFINALMYFROM() {
+        ImageIcon icon = new ImageIcon("asset/texture/gameicon.png");
         this.setSize(1280,720);
         setLayout(null);
         this.setVisible(true);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("PROJECT:ANCHOR");
+        this.setIconImage(icon.getImage());
         add(mainUI);
         UIHelper.apply(mainUI,1,0,0,0,1,0,0,0);
         mainUI.InitMyself();

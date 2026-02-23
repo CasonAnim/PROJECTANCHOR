@@ -77,8 +77,10 @@ public class User extends Player{
                 System.out.println("Cost : " + cost);
                 System.out.println("Budget" + current.size());
                 if (cost <= current.size()) {
+                    fireDisable();
                     fireEmpty();
-                } else {
+                }
+                else {
                     fireDisable();
                     fireSacrificeable();
                 }

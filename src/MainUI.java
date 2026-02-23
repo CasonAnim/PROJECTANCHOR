@@ -19,6 +19,7 @@ public class MainUI extends JPanel {
     JButton save = new JButton("Save");
     JButton backtoMenu = new JButton("Back to menu");
     List<JPanel> Comppy = new ArrayList<>();
+    boolean isEnd = false;
     boolean gameStart = false;
 
     MainUI() {
@@ -34,12 +35,14 @@ public class MainUI extends JPanel {
                     if (mainFrame.isVisible()) {
                         mainFrame.setVisible(false);
                         panel.setVisible(true);
+                    } else if (isEnd) {
+                        Enable(gameMenu);
+                        isEnd = false;
                     } else {
-
                         mainFrame.setVisible(true);
                         panel.setVisible(false);
                     }
-                } else {
+                }  else {
                     if (mapUI.getCurrentStage() == 0 && !loginPanel.isVisible()) {
                         Enable(gameMenu);
                         panel.setVisible(false);
@@ -164,6 +167,13 @@ public class MainUI extends JPanel {
                     Enable(mapUI);
                     back.setVisible(false);
                 }
+            } else if (Channel==7) {
+                Enable(gameMenu);
+                gameMenu.setVisible(false);
+                isEnd = true;
+                gameStart = false;
+                mapUI.setCurrentStage(0);
+                mapUI.setLoadfromsave(false);
             }
         }));
 

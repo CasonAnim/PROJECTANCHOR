@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -95,7 +96,7 @@ public class UIMainFrame extends JPanel {
             draw.setEnabled(true);
             drawCell.setEnabled(true);
         });
-
+        this.setBackground(new Color(99, 76, 147));
         GlobalListenerManger.getInstance().OnRemoteEvent(((Channel, data) -> {
             if (Channel==3) {
                 if ((int) data==1) {
@@ -105,6 +106,16 @@ public class UIMainFrame extends JPanel {
                 }
             } else if (Channel==4) {
                 endScreen.setVisible(false);
+            } else if (Channel==7) {
+                endScreen.setVisible(false);
+                up.setVisible(true);
+                down.setVisible(true);
+                draw.setVisible(true);
+                draw.setEnabled(true);
+                drawCell.setVisible(true);
+                drawCell.setEnabled(true);
+                End.setVisible(true);
+                hand.setVisible(true);
             }
         }));
 
@@ -127,6 +138,7 @@ public class UIMainFrame extends JPanel {
                 endScreen.InitLoot();
             } else {
                 endScreen.setTxt("YOU LOSE");
+                endScreen.setLose();
             }
 
 

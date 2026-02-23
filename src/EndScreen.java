@@ -63,6 +63,7 @@ public class EndScreen extends JPanel {
         panel.removeAll();
         Continue.addActionListener(e -> {
             GlobalListenerManger.getInstance().FireRemoteEvent(3, 1);
+            GlobalListenerManger.getInstance().FireRemoteEvent(7, null);
         });
     }
 
@@ -87,6 +88,7 @@ public class EndScreen extends JPanel {
             framewCrad.UpdateDisplay();
             framewCrad.yued();
             framewCrad.setNametag(b.getName());
+            framewCrad.setCharAva(b.getPic());
             framewCrad.setHpText(String.valueOf(b.getMaxHP()));
             framewCrad.setDMG(String.valueOf(b.getAT()));
 

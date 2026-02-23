@@ -1,16 +1,34 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 
 public class FramewCrad extends JPanel {
     Font font30 = new Font("Arial", Font.BOLD, 30);
-    Font font15 = new Font("Arial", Font.BOLD, 15);
+    Font font15 = new Font("Arial", Font.BOLD, 12);
     String name;
     boolean isEmpty;
     private boolean isSac;
     private boolean isSacSwitch;
     JLabel nametag = new JLabel("PLACEHOLDER");
-    JLabel charpic = new JLabel();
+    JLabel cellcost = new JLabel("N/A");
+    private ImageIcon cellicon = new ImageIcon("asset/texture/cellunit.png");
+    JLabel cellunit = new JLabel() {
+        @Override
+        protected void paintComponent(Graphics g) {
+                g.drawImage(cellicon.getImage(), 0, 0, getWidth(), getHeight(), this);
+        }
+    };
+    private ImageIcon charAva= null;
+    JLabel charpic = new JLabel() {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (charAva != null) {
+                g.drawImage(charAva.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        }
+    };
     JLabel dmgText = new JLabel("0");
     JLabel dmgIcon = new JLabel();
     JLabel hpText = new JLabel("0");
@@ -38,10 +56,14 @@ public class FramewCrad extends JPanel {
         c.add(dmgIcon);
         c.add(dmgText);
         c.add(frame);
+        c.add(cellunit);
+        c.add(cellcost);
         frame.setOpaque(false);
         frame.setIcon(cardframe);
         hpIcon.setIcon(hpicon);
         dmgIcon.setIcon(aticon);
+        cellcost.setFont(font15);
+
         for (JButton a : butty) {
             this.add(a);
             a.setEnabled(false);
@@ -62,7 +84,7 @@ public class FramewCrad extends JPanel {
         this.setBackground(Color.BLACK);
 
         this.setBorder(BorderFactory.createLineBorder(Color.WHITE , 2));
-
+//        cellunit.setBorder(BorderFactory.createLineBorder(Color.RED, 8));
         buttonselect.addActionListener(e -> {
             System.out.println("Pressed! , IM A " + ID.getName());
             GlobalListenerManger.getInstance().fireSelectListener(ID);
@@ -94,6 +116,13 @@ public class FramewCrad extends JPanel {
         this.ID = ID;
     }
 
+    public void setCharAva(String path) {
+        File fullpath = new File("asset/texture",path);
+        System.err.println(String.valueOf(fullpath) +"|| FROM [FRAMECRAD]");
+        this.charAva = new ImageIcon(fullpath.getPath());
+        this.charpic.repaint();
+    }
+
     @Override
     public void setName(String name) {
         this.name = name;
@@ -121,6 +150,8 @@ public class FramewCrad extends JPanel {
         placable.setVisible(true);
 
     }
+
+
     public void setEmpty() {
         for (Component comp : c) {
             comp.setVisible(false);
@@ -134,8 +165,6 @@ public class FramewCrad extends JPanel {
     public void resetSac() {
         isSac = false;
     }
-
-//    public void
 
     public void setAvailable() {
         this.setBorder(BorderFactory.createLineBorder(Color.WHITE , 5));
@@ -177,7 +206,7 @@ public class FramewCrad extends JPanel {
 
     public void UpdateDisplay() {
         UIHelper.apply(nametag, 1 , 0, 0 ,0 ,0.1, 0 ,0 ,0);
-        UIHelper.apply(charpic, 0.65 , 0, 0.5 ,0 ,0.38, 0 ,0.17 ,0,0.5,0);
+        UIHelper.apply(charpic, 0.63 , 0, 0.5 ,0 ,0.33, 0 ,0.19 ,0,0.5,0);
         UIHelper.apply(dmgIcon, 0.25 , 0, 0 ,0 ,0.15, 0 ,0.6 ,0);
         UIHelper.apply(dmgText, 0.25 , 0, 0 ,0 ,0.3, 0 ,0.65 ,0);
         UIHelper.apply(hpIcon, 0.25 , 0, 1 ,0 ,0.15, 0 ,0.6 ,0,1,0);
@@ -186,6 +215,10 @@ public class FramewCrad extends JPanel {
         UIHelper.apply(sacrifice, 1 , 0, 0 ,0 ,1, 0 ,0,0);
         UIHelper.apply(placable, 1 , 0, 0 ,0 ,1, 0 ,0,0);
         UIHelper.apply(frame, 1,0,0,0,1,0,0,0);
+        UIHelper.apply(cellunit, 0.16,0,1,0,0.08,0,0.19,0,1,0);
+        UIHelper.apply(cellcost, 0.16,0,0.9,0,0.08,0,0.21,0,1,0);
+        setComponentZOrder(cellunit, 0);
+        setComponentZOrder(cellcost, 0);
     }
 
     public void yued() {
@@ -204,11 +237,25 @@ public class FramewCrad extends JPanel {
     }
 
     public void clearplaceable() {
+
+        for (JButton b : butty) {
+            b.setVisible(false);
+            b.setEnabled(false);
+        }
+        setBorder(BorderFactory.createLineBorder(Color.WHITE , 2));
+    }
+    public void clearplaceableCardon() {
         removeBoarder();
         for (JButton b : butty) {
             b.setVisible(false);
+            b.setEnabled(false);
         }
-        setBorder(BorderFactory.createLineBorder(Color.WHITE , 2));
+
+    }
+
+    public void setCellcost(int cellcosta) {
+        System.out.println("Cost : "+cellcosta);
+        this.cellcost.setText(String.valueOf(cellcosta));
     }
 
     public boolean isSac() {
