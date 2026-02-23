@@ -13,8 +13,8 @@ public class User extends Player{
     Scanner scanner = new Scanner(System.in);
     public User(Map<Card, Integer> deck ) {
         super(deck);
-        Startdraw(getDeck(), START_NUM);
-        add(new InstanceCard(CardOriginal.CELL));
+
+
         GlobalListenerManger.getInstance().onSacrificeSelectListener(e-> {
                 current.add(e);
                 System.out.println("Budget" + current.size());
@@ -25,6 +25,42 @@ public class User extends Player{
                     fireSacrificeable();
                 }
         });
+
+        GlobalListenerManger.getInstance().OnRemoteEvent(((Channel, data) -> {
+            System.out.println("DEBUG: Event received on Channel " + Channel);
+            if (Channel == 0 ) {
+                System.err.println("Receive Request");
+                GlobalListenerManger.getInstance().FireRemoteEvent(1, getDeckTemplate());
+                System.err.println("[USER] - SENDINDECK TO SAVE || DECK SIZE : " + getDeckTemplate().size());
+            }
+            if (Channel == 4 ) {
+                System.err.println("[CHANEL 4] - CONNECT -> ADDING CARD");
+                if (data instanceof Card) {
+                   addTodeck( (Card) data);
+                }
+            }
+        }));
+
+        GlobalListenerManger.getInstance().onUiListener(e -> {
+            if (e==19) {
+//                System.out.println(getDeckTemplate());
+            }
+        });
+
+//        GlobalListenerManger.getInstance().OnRemoteEvent((Channel, data) -> {
+//                    if (Channel==0) {
+//                        if (data == null) {
+//
+//                            GlobalListenerManger.getInstance().FireRemoteEvent(1, getDeckTemplate());
+//                            System.err.println("[USER] - SENDINDECK TO SAVE || DECK SIZE : " + getDeckTemplate().size());
+//                        }
+//                    } else if (Channel==4) {
+//                        if (data instanceof Card) {
+//                            addTodeck((Card) data);
+//                        }
+//                    }
+//                }
+//        );
 
         GlobalListenerManger.getInstance().onDrawListener(e -> {
             if (e) {
@@ -60,6 +96,20 @@ public class User extends Player{
         }));
     }
 
+    @Override
+    public void initHand() {
+
+        Startdraw(getDeck(), START_NUM);
+        add(new InstanceCard(CardOriginal.CELL));
+    }
+
+    @Override
+    public void reInit() {
+        getHand().clear();
+        getDeck().clear();
+        setDeck(new ArrayList<>(getDeckTemplate()));
+        initHand();
+    }
 
     public void fireEmpty() {
         GlobalListenerManger.getInstance().fireIsSlotEmpty(board.getIndexAvailableSlotList(true));
@@ -177,6 +227,11 @@ public class User extends Player{
 
     @Override
     public void Startdraw(List<InstanceCard> deck, int n) {
+        System.err.println("DECk SIZE : " + getDeck().size());
+        for (InstanceCard card : getDeck()) {
+            System.out.println(card.getName());
+        }
+
         super.Startdraw(deck, n);
         for (InstanceCard card : getHand()) {
             GlobalListenerManger.getInstance().fireAddCard(card);

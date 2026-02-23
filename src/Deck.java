@@ -4,8 +4,10 @@ import java.util.stream.Collectors;
 public class Deck {
     public static final Map<Card, Integer> STARTER_DECK = Map.of(
             CardOriginal.GUARD, 5,
-            CardOriginal.JUGGERNAUT, 20,
+            CardOriginal.JUGGERNAUT, 2,
             CardOriginal.RIFLEMAN,4);
+    public static final Map<Card, Integer> ADMIN_DECK = Map.of(
+            CardOriginal.GOD, 5);
 
     public static final Map<Card, Integer> ENEMY_DECK = Map.of(
             CardOriginal.Glitch, 5 ,

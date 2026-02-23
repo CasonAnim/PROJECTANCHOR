@@ -10,29 +10,51 @@ public abstract class Player {
     public static final int START_NUM = 5;
     private List<InstanceCard> hand;
     private List<InstanceCard> deck;
-
+    private List<InstanceCard> deckTemplate;
 
     public Player(Map<Card, Integer> deck) {
         this.hand = new ArrayList<>();
         this.deck = new ArrayList<>();
-        this.deck = Deck.InitDeck(deck);
-//        show();
+        this.deckTemplate = Deck.InitDeck(deck);
+        this.deck = new ArrayList<>(deckTemplate);
+        show();
+
+
+
 
     }
 
     public void Startdraw(List<InstanceCard> deck , int n) {
         int tempindex;
         for (int i = 0; i < n; i++) {
-            tempindex = rng.nextInt(0, deck.size());
+            tempindex = rng.nextInt(deck.size());
             hand.add(deck.get(tempindex));
             deck.remove(tempindex);
         }
     }
-    public void draw() {
-        int temp = rng.nextInt(0,deck.size());
-        hand.add(deck.get(temp));
 
+    public List<InstanceCard> getDeckTemplate() {
+        return deckTemplate;
+    }
+    public void addTodeck(Card card) {
+        deckTemplate.add(new InstanceCard(card));
+    }
+    public void initHand() {
+    }
+
+    public void reInit() {
+
+    }
+    public void ResetTemplate(Map<Card, Integer> deck) {
+        deckTemplate = Deck.InitDeck(deck);
+    }
+
+
+    public void draw() {
+        int temp = rng.nextInt(deck.size());
+        hand.add(deck.get(temp));
         deck.remove(temp);
+        show();
     }
     public InstanceCard getTempSelect() {
         return tempSelect;

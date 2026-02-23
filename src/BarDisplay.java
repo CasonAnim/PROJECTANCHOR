@@ -26,6 +26,9 @@ public class BarDisplay extends JPanel {
         setComponentZOrder(text, 0);
 
     }
+    public void Reset(){
+
+    }
 
     public void Init() {
         UIHelper.apply(fill , 1 , 0, 0,0,1,0,0,0);

@@ -23,7 +23,8 @@ public class GlobalListenerManger {
     private EndturnListener endturnListener;
     private AfterBattleListener afterBattleListener;
     private GameResultListener gameResultListener;
-    private UIListener uiListener;
+    private List<UIListener> uiListener = new ArrayList<>();
+    private List<RemoteSave> remoteSaves = new ArrayList<>();
 
 
     private GlobalListenerManger() {}
@@ -59,12 +60,24 @@ public class GlobalListenerManger {
 
 
     public void onUiListener(UIListener uiListener) {
-        this.uiListener = uiListener;
+        this.uiListener.add(uiListener);
     }
 
     public void fireUiListener(int index) {
-        if (uiListener != null) {
-            uiListener.onMove(index);
+        for (UIListener uiListener1 : uiListener) {
+            System.err.println("Hello");
+            uiListener1.onMove(index);
+        }
+    }
+
+
+    public void OnRemoteEvent(RemoteSave remoteSave) {
+        this.remoteSaves.add(remoteSave);
+    }
+
+    public void FireRemoteEvent(int Channel, Object data) {
+        for (RemoteSave i : remoteSaves) {
+            i.onRemote(Channel, data);
         }
     }
 

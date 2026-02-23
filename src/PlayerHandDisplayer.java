@@ -13,6 +13,18 @@ public class PlayerHandDisplayer extends JPanel {
     List<FramewCrad> framewCrads = new ArrayList<>();
     PlayerHandDisplayer() {
         this.setLayout(null);
+        GlobalListenerManger.getInstance().onUiListener(e-> {
+            System.out.println(e + "|| From player HAnd");
+            if (e==15) {
+                System.err.println("CLEAR");
+                card.clear();
+
+                for (FramewCrad c : framewCrads) {
+                    remove(c);
+                }
+                framewCrads.clear();
+            }
+        });
 
         GlobalListenerManger.getInstance().OnonRemovefromHand(e -> {
             int index = card.indexOf(e);

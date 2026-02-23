@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.Scanner;
 
 public class LoadSaveMenu extends JPanel {
@@ -29,7 +30,33 @@ public class LoadSaveMenu extends JPanel {
         panel.setSize(scrollPane.getSize());
     }
 
+    public void Clear() {
+        panel.removeAll();
+    }
+    public void RenderSave(Datawrapper datawrapper , int index) {
+        SaveSlot n = new SaveSlot();
+
+
+        boolean isPassReq = datawrapper.isRequirdPass();
+        String pass = datawrapper.pass;
+        n.setTitle(index);
+        n.setDesc(datawrapper.getStage());
+        n.setReqpass(isPassReq);
+        n.InjectData(datawrapper);
+        panel.add(n);
+        int parentW = 800;
+        int parentH = 100;
+
+        n.setSize(parentW, parentH); // <--- ต้องตบขนาดเข้าไปก่อน!
+        n.setPreferredSize(new Dimension(parentW, parentH));
+        n.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+        panel.add(Box.createRigidArea(new Dimension(0,20)));
+        System.out.println("W : " + n.getWidth());
+        System.out.println("H : " + n.getHeight());
+        n.Init();
+    }
     public void RenderSave(int amountOfSave) {
+        panel.removeAll();
         if (amountOfSave>0) {
             for (int i = 0; i < amountOfSave; i++) {
                 SaveSlot n = new SaveSlot();

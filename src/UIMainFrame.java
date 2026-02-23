@@ -14,7 +14,6 @@ public class UIMainFrame extends JPanel {
     private EndScreen endScreen = new EndScreen();
 
 
-
     private PlayerHandDisplayer hand = new PlayerHandDisplayer();
     private CardSlotDisplayer board = new CardSlotDisplayer();
     UIMainFrame() {
@@ -65,7 +64,6 @@ public class UIMainFrame extends JPanel {
 
 
 
-//        UIHelper.apply(drawCell, 0.15,0,);
 
         End.setEnabled(false);
 
@@ -85,6 +83,8 @@ public class UIMainFrame extends JPanel {
             GlobalListenerManger.getInstance().fireDrawCard(true);
             afterDraw();
         });
+
+        ResetDraw();
 //
         End.addActionListener(e -> {
             GlobalListenerManger.getInstance().fireEndTurn();
@@ -95,21 +95,41 @@ public class UIMainFrame extends JPanel {
             draw.setEnabled(true);
             drawCell.setEnabled(true);
         });
+
+        GlobalListenerManger.getInstance().OnRemoteEvent(((Channel, data) -> {
+            if (Channel==3) {
+                if ((int) data==1) {
+                    endScreen.setVisible(false);
+                } else if ((int) data==2) {
+                    Enable();
+                }
+            } else if (Channel==4) {
+                endScreen.setVisible(false);
+            }
+        }));
+
         GlobalListenerManger.getInstance().onGameResult(e-> {
-            remove(up);
-            remove(down);
+            endScreen.setVisible(true);
+//            remove(up);
+//            remove(down);
+            up.setVisible(false);
+            down.setVisible(false);
             draw.setVisible(false);
             drawCell.setVisible(false);
             End.setVisible(false);
             hand.setVisible(false);
+
+            UIHelper.apply(endScreen,1,0,0,0,1,0,0,0);
+            endScreen.Init();
             if (e) {
                 endScreen.setTxt("YOU WIN");
+                endScreen.setwin();
+                endScreen.InitLoot();
             } else {
                 endScreen.setTxt("YOU LOSE");
             }
-            endScreen.setVisible(true);
-            UIHelper.apply(endScreen,1,0,0,0,1,0,0,0);
-            endScreen.Init();
+
+
 
 
 
@@ -170,4 +190,21 @@ public class UIMainFrame extends JPanel {
         UIHelper.apply(up, 0.45, 0, 0.5, 0, 0.05,0,0.02,0,0.5,0);
         UIHelper.apply(down, 0.45, 0, 0.5, 0, 0.03,0,0.98,0,0.5,1);
     };
+
+    public void ResetDraw() {
+        draw.setEnabled(true);
+        drawCell.setEnabled(true);
+        End.setEnabled(false);
+    }
+
+    public void Enable() {
+        up.setVisible(true);
+        down.setVisible(true);
+        draw.setVisible(true);
+        drawCell.setVisible(true);
+        End.setVisible(true);
+        draw.setEnabled(true);
+        drawCell.setEnabled(true);
+        hand.setVisible(true);
+    }
 }

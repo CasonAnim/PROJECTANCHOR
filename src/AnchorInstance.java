@@ -12,6 +12,10 @@ public class AnchorInstance {
         anchor.ability(board);
     }
 
+    public void setSelfHP(int selfHP) {
+        this.selfHP = selfHP;
+    }
+
     public int getMAXHP() {
         return anchor.getHp();
     }

@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.CharArrayReader;
+import java.util.Map;
 
 public class MapUI extends JPanel {
-    private int currentStage = 4;
+    private int currentStage = 0;
     private JPanel Screen = new JPanel();
     private JPanel islandDisplay = new JPanel();
     private JPanel icon = new JPanel();
@@ -11,6 +13,9 @@ public class MapUI extends JPanel {
     private ImageIcon bossicon = new ImageIcon("asset/texture/death.png");
     private JButton start = new JButton("Start Battle");
     private GridBagConstraints gbc = new GridBagConstraints();
+    private Map<Card, Integer> deck;
+    private Player player = new User(Deck.STARTER_DECK);
+    private boolean loadfromsave = false;
 
     MapUI() {
         gbc.fill = GridBagConstraints.BOTH;
@@ -30,6 +35,26 @@ public class MapUI extends JPanel {
         icon.setLayout(new GridBagLayout());
         islandDisplay.setOpaque(false);
         icon.setOpaque(false);
+        GlobalListenerManger.getInstance().OnRemoteEvent((Channel, data) -> {
+                    if (Channel==0) {
+                        GlobalListenerManger.getInstance().FireRemoteEvent(1, currentStage);
+                    } else if (Channel == 2) {
+                        if ((boolean) data) {
+                            currentStage++;
+                        } else {
+                            currentStage=0;
+                        }
+                    }
+                }
+        );
+        GlobalListenerManger.getInstance().onUiListener(e -> {
+            if (e==16) {
+                System.err.println(e +" || Map");
+                currentStage = 0;
+
+                setMarker(currentStage);
+            }
+        });
 
         for (int i = 0; i < 5; i++) {
             Image tempImg;
@@ -55,10 +80,30 @@ public class MapUI extends JPanel {
         add(Screen);
         add(islandDisplay);
         add(icon);
-        setMarker(3);
+        setMarker(currentStage);
 
         start.addActionListener(e -> {
             GlobalListenerManger.getInstance().fireUiListener(2);
+            GlobalListenerManger.getInstance().fireUiListener(15);
+            Board boardp = new Board();
+
+
+            AnchorInstance a = new AnchorInstance(AnchorOriginal.anchor_1);
+            if (!loadfromsave) {
+                System.out.println("[NO SAVE FOUND]");
+                player.ResetTemplate(Deck.STARTER_DECK);
+                player.reInit();
+            }else {
+                System.out.println("[SAVE FOUND]");
+                for (Map.Entry<Card, Integer> entry : deck.entrySet()) {
+                    System.out.println(entry.getKey().getName() + " || " +entry.getValue());
+                }
+
+                player.reInit();
+            }
+            new BattleManager(boardp, player, a);
+
+//            System.out.println("HASH PLR : "+player.hashCode());
         });
 
     }
@@ -73,7 +118,25 @@ public class MapUI extends JPanel {
         setComponentZOrder(icon ,0);
     }
 
+    public void setLoadfromsave(boolean loadfromsave) {
+        this.loadfromsave = loadfromsave;
+    }
+
+    public int getCurrentStage() {
+        return currentStage;
+    }
+
+    public void setDeck(Map<Card, Integer> deck) {
+        this.deck = deck;
+        player.ResetTemplate(deck);
+    }
+
+    public void setCurrentStage(int currentStage) {
+        this.currentStage = currentStage;
+    }
+
     public void setMarker(int StageIndex) {
+        icon.removeAll();
 
         for (int i = 0; i < 5; i++) {
             if (i==StageIndex) {

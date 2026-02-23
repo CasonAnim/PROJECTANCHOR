@@ -6,24 +6,36 @@ public class BattleManager {
     AnchorInstance anchor;
     boolean isGameEnd;
     static final int MAXENEMYHP = 10;
-    static int ENEMYHP = MAXENEMYHP;
+    static int ENEMYHP;
 
     public BattleManager(Board board , Player player ,AnchorInstance anchor) {
         this.board = board;
         this.player = player;
         this.CPU = new PlayerCPU(Deck.ENEMY_DECK);
         this.anchor = anchor;
+
+        this.anchor.setSelfHP(anchor.getMAXHP());
+        ENEMYHP =MAXENEMYHP;
+
+        System.out.println("ENEMY HP : " + ENEMYHP);
+        System.out.println("PLAYER HP : " + anchor.selfHP);
         updateBoard();
         player.showHand();
 
         GlobalListenerManger.getInstance().onEndturn(() -> {
-            if (isGameEnd) {
-                System.out.println("Game has been Finised");
-            } else {
-                Init2();
-                show();
-            }
+            Init2();
         });
+
+
+
+//        System.identityHashCode(this)
+
+
+
+        GlobalListenerManger.getInstance().fireAfterBattleListener(anchor.selfHP, true);
+        GlobalListenerManger.getInstance().fireAfterBattleListener(ENEMYHP, false);
+
+
     }
 
 
@@ -118,9 +130,11 @@ public class BattleManager {
             if (playerDead()) {
                 System.out.println("CPU win");
                 GlobalListenerManger.getInstance().fireGameResult(false);
+                GlobalListenerManger.getInstance().FireRemoteEvent(2, false);
             } else {
                 System.out.println("Player win");
                 GlobalListenerManger.getInstance().fireGameResult(true);
+                GlobalListenerManger.getInstance().FireRemoteEvent(2, true);
             }
         }
     }
@@ -151,8 +165,15 @@ public class BattleManager {
             }
             anchor.takeDMG(board.getDirectDMG());
         }
-        GlobalListenerManger.getInstance().fireAfterBattleListener(anchor.selfHP, true);
-        GlobalListenerManger.getInstance().fireAfterBattleListener(ENEMYHP, false);
+        sendAncHPEnimHP();
+
+
         board.clearDMG();
     }
+    public void sendAncHPEnimHP(){
+        GlobalListenerManger.getInstance().fireAfterBattleListener(anchor.selfHP, true);
+        GlobalListenerManger.getInstance().fireAfterBattleListener(ENEMYHP, false);
+    }
 }
+
+

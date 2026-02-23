@@ -26,10 +26,12 @@ public class GameMenu extends JPanel {
         play.addActionListener(e -> {
             System.out.println("Lets play !");
             GlobalListenerManger.getInstance().fireUiListener(0);
+            GlobalListenerManger.getInstance().fireUiListener(16);
         });
         load.addActionListener(e -> {
             System.out.println("Looking For a Save!");
             GlobalListenerManger.getInstance().fireUiListener(1);
+            GlobalListenerManger.getInstance().fireUiListener(17);
         });
         setBackground(Color.BLACK);
 

@@ -17,7 +17,21 @@ public class CardSlotDisplayer extends JPanel {
         this.add(Health);
         this.add(EnimHealth);
 
+        GlobalListenerManger.getInstance().onUiListener(e -> {
+            System.err.println("Receive e : "+ e +" [Displayer]");
+
+            if (e==15) {
+                for (int i = 0; i < Board.SLOT_SIZE; i++) {
+                    System.err.println("Receive e : "+ e +" [Displayer]");
+                    plrSlot.setEmpty();
+                    enemySlot.setEmpty();
+                }
+
+            }
+        });
+
         GlobalListenerManger.getInstance().onAfterBattleListener((e,v) -> {
+            System.err.println("Receive HP : "+e);
             double eD = (double) e /10;
             if (v) {
                 Health.setFill(eD);

@@ -8,6 +8,10 @@ public class InstanceCard {
         this.selfHP = card.getMaxHP();
     }
 
+    public Card getCard() {
+        return card;
+    }
+
     public String getName() {
         return this.card.getName();
     }

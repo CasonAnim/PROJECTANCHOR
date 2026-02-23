@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class SaveSlot extends JPanel {
     private JLabel title = new JLabel("Save : N/A");
@@ -31,7 +32,40 @@ public class SaveSlot extends JPanel {
          UIHelper.apply(load,0.25,0,1,0,0.5,0,0.25,0,1,0);
     }
 
+    public void addAction (ActionListener listener) {
+        load.addActionListener(listener);
+    }
+
     public void setTitle(int index) {
         this.title.setText("Save : "+ index);
+    }
+
+    public void InjectData(Datawrapper data) {
+        load.addActionListener(e -> {
+            System.out.println(title.getText());
+            System.out.println("Stage : " + data.getStage());
+            System.out.println("Deck : " + data.getDeck());
+            if (data.isRequirdPass()) {
+                GlobalListenerManger.getInstance().FireRemoteEvent(5, data);
+            } else {
+                GlobalListenerManger.getInstance().FireRemoteEvent(6, data);
+            }
+        });
+    }
+
+    public JLabel getDesc() {
+        return Desc;
+    }
+
+    public void setDesc(int stage) {
+        Desc.setText("Stage : " + stage);
+    }
+
+    public JLabel getReqpass() {
+        return reqpass;
+    }
+
+    public void setReqpass(boolean isReq) {
+            reqpass.setText("Password Requirement : " + isReq);
     }
 }
